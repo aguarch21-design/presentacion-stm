@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Monitor STM — Presentación Ejecutiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#08090d;
+  --s1:#0e1018;
+  --s2:#13161f;
+  --bd:rgba(255,255,255,0.06);
+  --bd2:rgba(255,255,255,0.12);
+  --tx:#e8ecf4;
+  --mu:#5a6070;
+  --ok:#00d98b;
+  --late:#ff4757;
+  --early:#ffa502;
+  --ng:#a0a8b8;
+  --ac:#3d7fff;
+  --ac2:#6b9fff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 3rem;
+  background:rgba(8,9,13,0.85);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--bd);
+}
+.nav-brand{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.15em;color:var(--ac2);}
+.nav-dots{display:flex;gap:8px;}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--mu);cursor:pointer;transition:background 0.2s;}
+.nav-dot.active{background:var(--ac);}
+
+/* SLIDES */
+.slide{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 10% 4rem;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--bd);
+}
+.slide-num{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--mu);
+  letter-spacing:0.15em;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:8px;
+}
+.slide-num::after{content:'';flex:1;max-width:60px;height:1px;background:var(--bd2);}
+
+/* SLIDE 1 - HERO */
+.hero{
+  background:radial-gradient(ellipse at 60% 40%, rgba(61,127,255,0.08) 0%, transparent 60%),
+             radial-gradient(ellipse at 20% 80%, rgba(0,217,139,0.05) 0%, transparent 50%);
+}
+.hero-eyebrow{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;
+  color:var(--ac);text-transform:uppercase;margin-bottom:1.5rem;
+  padding:4px 12px;border:1px solid rgba(61,127,255,0.3);border-radius:20px;
+  display:inline-block;background:rgba(61,127,255,0.06);
+}
+.hero h1{
+  font-family:'Syne',sans-serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:800;
+  line-height:1.0;margin-bottom:1.5rem;
+  background:linear-gradient(135deg,#e8ecf4 0%,#6b9fff 60%,#00d98b 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:1.15rem;color:var(--mu);max-width:580px;line-height:1.7;margin-bottom:3rem;}
+.hero-meta{display:flex;gap:2rem;flex-wrap:wrap;}
+.hero-meta-item{font-size:12px;color:var(--mu);font-family:'DM Mono',monospace;}
+.hero-meta-item span{color:var(--tx);display:block;font-size:14px;margin-bottom:2px;}
+
+/* BIG STAT */
+.big-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:16px;overflow:hidden;margin-bottom:4rem;}
+.stat-box{background:var(--s1);padding:2rem;text-align:center;}
+.stat-box .n{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;line-height:1;}
+.stat-box .l{font-size:12px;color:var(--mu);margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;}
+.stat-ok .n{color:var(--ok);}
+.stat-late .n{color:var(--late);}
+.stat-early .n{color:var(--early);}
+.stat-ng .n{color:var(--ng);}
+
+/* SECTION TITLE */
+.section-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;
+  color:var(--ac);text-transform:uppercase;margin-bottom:1rem;
+}
+h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.15;margin-bottom:1rem;}
+.lead{font-size:1.05rem;color:var(--mu);line-height:1.75;max-width:640px;margin-bottom:3rem;}
+
+/* FEATURE GRID */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:3rem;}
+.feat-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:14px;
+  padding:1.5rem;position:relative;overflow:hidden;transition:border-color 0.2s;
+}
+.feat-card:hover{border-color:var(--bd2);}
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.feat-card.c-ok::before{background:var(--ok);}
+.feat-card.c-late::before{background:var(--late);}
+.feat-card.c-early::before{background:var(--early);}
+.feat-card.c-ng::before{background:var(--ng);}
+.feat-card.c-ac::before{background:var(--ac);}
+.feat-icon{font-size:1.75rem;margin-bottom:1rem;}
+.feat-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feat-desc{font-size:13px;color:var(--mu);line-height:1.65;}
+
+/* HOW IT WORKS */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{
+  display:grid;grid-template-columns:60px 1fr;gap:1.5rem;
+  padding:1.5rem 0;border-bottom:1px solid var(--bd);
+}
+.step:last-child{border-bottom:none;}
+.step-num{
+  font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--bd2);
+  line-height:1;
+}
+.step-content h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:600;margin-bottom:0.4rem;}
+.step-content p{font-size:13px;color:var(--mu);line-height:1.65;}
+.step-tag{
+  display:inline-block;font-size:10px;font-family:'DM Mono',monospace;
+  padding:2px 8px;border-radius:20px;background:rgba(61,127,255,0.1);
+  color:var(--ac2);margin-top:6px;
+}
+
+/* STATUS PILLS */
+.status-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:3rem;}
+.status-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:30px;font-size:13px;font-weight:500;
+}
+.sp-ok{background:rgba(0,217,139,0.1);color:var(--ok);border:1px solid rgba(0,217,139,0.2);}
+.sp-late{background:rgba(255,71,87,0.1);color:var(--late);border:1px solid rgba(255,71,87,0.2);}
+.sp-early{background:rgba(255,165,2,0.1);color:var(--early);border:1px solid rgba(255,165,2,0.2);}
+.sp-ng{background:rgba(160,168,184,0.1);color:var(--ng);border:1px solid rgba(160,168,184,0.2);}
+.sp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+@media(max-width:768px){.two-col{grid-template-columns:1fr;}}
+
+/* WHY LIST */
+.why-list{display:flex;flex-direction:column;gap:1rem;}
+.why-item{
+  display:flex;gap:1rem;padding:1.25rem;
+  background:var(--s1);border:1px solid var(--bd);border-radius:12px;
+}
+.why-num{
+  font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;
+  color:var(--ac);line-height:1;flex-shrink:0;width:32px;
+}
+.why-text h4{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;margin-bottom:3px;}
+.why-text p{font-size:12px;color:var(--mu);line-height:1.6;}
+
+/* TECH STACK */
+.tech-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:2rem;}
+.tech-chip{
+  font-family:'DM Mono',monospace;font-size:11px;
+  padding:5px 12px;border-radius:6px;
+  background:var(--s2);border:1px solid var(--bd2);color:var(--mu);
+}
+
+/* CTA SLIDE */
+.cta-slide{
+  text-align:center;align-items:center;
+  background:radial-gradient(ellipse at 50% 50%, rgba(61,127,255,0.06) 0%, transparent 70%);
+}
+.cta-slide h2{margin-bottom:1rem;}
+.cta-slide .lead{margin:0 auto 2.5rem;}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:14px;font-weight:500;padding:14px 28px;border-radius:12px;
+  background:var(--ac);color:#fff;text-decoration:none;font-family:'DM Sans',sans-serif;
+  transition:opacity 0.2s;
+}
+.cta-btn:hover{opacity:0.85;}
+.url-box{
+  margin-top:2rem;font-family:'DM Mono',monospace;font-size:13px;
+  padding:12px 24px;background:var(--s1);border:1px solid var(--bd2);
+  border-radius:10px;color:var(--ac2);display:inline-block;
+}
+
+/* BG DECORATION */
+.bg-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:linear-gradient(var(--bd) 1px,transparent 1px),linear-gradient(90deg,var(--bd) 1px,transparent 1px);
+  background-size:60px 60px;opacity:0.4;pointer-events:none;
+}
+.slide>*:not(.bg-grid){position:relative;z-index:1;}
+
+/* ANIMATION */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.slide .slide-num,.slide h2,.slide h1,.slide .lead{animation:fadeUp 0.6s ease both;}
+.slide .slide-num{animation-delay:0.1s;}
+.slide h1,.slide h2{animation-delay:0.2s;}
+.slide .lead{animation-delay:0.3s;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">STM · MONITOR</div>
+  <div class="nav-dots">
+    <div class="nav-dot active" onclick="scrollTo(0)"></div>
+    <div class="nav-dot" onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})"></div>
+    <div class="nav-dot" onclick="document.getElementById('s3').scrollIntoView({behavior:'smooth'})"></div>
+    <div class="nav-dot" onclick="document.getElementById('s4').scrollIntoView({behavior:'smooth'})"></div>
+    <div class="nav-dot" onclick="document.getElementById('s5').scrollIntoView({behavior:'smooth'})"></div>
+    <div class="nav-dot" onclick="document.getElementById('s6').scrollIntoView({behavior:'smooth'})"></div>
+    <div class="nav-dot" onclick="document.getElementById('s7').scrollIntoView({behavior:'smooth'})"></div><div class="nav-dot" onclick="document.getElementById('s8').scrollIntoView({behavior:'smooth'})"></div>
+  </div>
+</nav>
+
+<!-- SLIDE 1: HERO -->
+<section class="slide hero" id="s1">
+  <div class="bg-grid"></div>
+  <div class="hero-eyebrow">División Transporte · IMM Montevideo</div>
+  <h1>Monitor de<br>Cumplimiento<br>STM</h1>
+  <p class="hero-sub">Sistema de monitoreo en tiempo real del cumplimiento de horarios del Sistema de Transporte Metropolitano de Montevideo.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span>144</span>Líneas monitoreadas</div>
+    <div class="hero-meta-item"><span>504</span>Puntos de control</div>
+    <div class="hero-meta-item"><span>293.000+</span>Registros horarios teóricos</div>
+    <div class="hero-meta-item"><span>Tiempo real</span>Actualización automática</div>
+  </div>
+</section>
+
+<!-- SLIDE 2: PROBLEMA -->
+<section class="slide" id="s2">
+  <div class="slide-num">01 — El problema</div>
+  <h2>¿Cómo saber si<br>los buses cumplen<br>el horario?</h2>
+  <p class="lead">Hoy no existe una herramienta que permita visualizar en tiempo real si cada unidad del STM está cumpliendo su minuta teórica. La información existe pero está dispersa en múltiples fuentes sin integración.</p>
+  <div class="why-list">
+    <div class="why-item">
+      <div class="why-num">→</div>
+      <div class="why-text">
+        <h4>Datos de GPS en tiempo real</h4>
+        <p>La IMM publica la posición y estado de cada bus cada ~30 segundos a través de su API pública.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">→</div>
+      <div class="why-text">
+        <h4>Horarios teóricos por punto de control</h4>
+        <p>El STM dispone de minutas teóricas con más de 293.000 registros de horario por parada, línea y variante.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">→</div>
+      <div class="why-text">
+        <h4>Sin integración</h4>
+        <p>Ambas fuentes existían por separado, sin ninguna herramienta que las cruzara para determinar cumplimiento real.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: QUE ES -->
+<section class="slide" id="s3">
+  <div class="slide-num">02 — La solución</div>
+  <h2>Un dashboard que<br>cruza posición real<br>con horario teórico</h2>
+  <p class="lead">El Monitor STM integra automáticamente los datos de GPS en tiempo real con las minutas teóricas del STM para determinar el estado de cumplimiento de cada unidad.</p>
+  <div class="status-row">
+    <div class="status-pill sp-ok"><div class="sp-dot" style="background:var(--ok);"></div>En horario — menos de 2 minutos de diferencia</div>
+    <div class="status-pill sp-late"><div class="sp-dot" style="background:var(--late);"></div>Atrasado — más de 2 minutos tarde</div>
+    <div class="status-pill sp-early"><div class="sp-dot" style="background:var(--early);"></div>Adelantado — más de 2 minutos adelante</div>
+    <div class="status-pill sp-ng"><div class="sp-dot" style="background:var(--ng);"></div>Sin GPS — sin señal hace más de 5 minutos</div>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="section-tag">Metodología de cruce</div>
+      <p style="font-size:13px;color:var(--mu);line-height:1.75;">Para cada bus en tiempo real, el sistema identifica el punto de control más cercano dentro de un radio de 1km, consulta el horario teórico para esa línea y variante según el tipo de día (hábil, sábado, domingo), y calcula la diferencia en minutos entre la hora actual y la hora teórica de paso más próxima.</p>
+    </div>
+    <div>
+      <div class="section-tag">Cobertura</div>
+      <p style="font-size:13px;color:var(--mu);line-height:1.75;">Cubre las 4 empresas del STM: CUTCSA, COME, COETC y UCOT. La clasificación se aplica a cada unidad individualmente, permitiendo filtrar por empresa, línea o número de coche en tiempo real.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: FUNCIONALIDADES -->
+<section class="slide" id="s4">
+  <div class="slide-num">03 — Funcionalidades</div>
+  <h2>Herramientas<br>disponibles</h2>
+  <p class="lead">El sistema cuenta con múltiples vistas y filtros para analizar el cumplimiento desde distintos ángulos.</p>
+  <div class="feat-grid">
+    <div class="feat-card c-ok">
+      <div class="feat-icon">🗺️</div>
+      <div class="feat-title">Mapa en tiempo real</div>
+      <div class="feat-desc">Visualización geográfica de todas las unidades con código de colores por estado. Incluye puntos de control como referencia de red.</div>
+    </div>
+    <div class="feat-card c-late">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Métricas de cumplimiento</div>
+      <div class="feat-desc">Totales en tiempo real de unidades en horario, atrasadas, adelantadas y sin GPS. Con porcentajes sobre el total de la flota activa.</div>
+    </div>
+    <div class="feat-card c-early">
+      <div class="feat-icon">🔍</div>
+      <div class="feat-title">Filtros avanzados</div>
+      <div class="feat-desc">Filtrado por empresa (CUTCSA, COME, COETC, UCOT), línea específica y número de unidad. Combinables entre sí.</div>
+    </div>
+    <div class="feat-card c-ng">
+      <div class="feat-icon">📋</div>
+      <div class="feat-title">Tabla detallada</div>
+      <div class="feat-desc">Listado completo con línea, número de coche, estado, minutos de atraso/adelanto y punto de control de referencia. Ordenable por cualquier columna.</div>
+    </div>
+    <div class="feat-card c-ac">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Actualización automática</div>
+      <div class="feat-desc">Configuración de refresco automático cada 30 segundos, 1, 2 o 5 minutos. Barra de progreso visual con cuenta regresiva.</div>
+    </div>
+    <div class="feat-card c-ok">
+      <div class="feat-icon">📱</div>
+      <div class="feat-title">Acceso universal</div>
+      <div class="feat-desc">Disponible desde cualquier dispositivo con navegador web — PC, tablet o celular — sin instalación ni aplicación adicional.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: POR QUE USARLO -->
+<section class="slide" id="s5">
+  <div class="slide-num">04 — Valor para la gestión</div>
+  <h2>¿Por qué usar<br>esta herramienta?</h2>
+  <p class="lead">El Monitor STM aporta capacidad de control y evidencia objetiva para la toma de decisiones sobre el servicio de transporte metropolitano.</p>
+  <div class="why-list">
+    <div class="why-item">
+      <div class="why-num">1</div>
+      <div class="why-text">
+        <h4>Control operativo en tiempo real</h4>
+        <p>Permite identificar inmediatamente qué líneas o unidades están incumpliendo el horario en un momento dado, habilitando intervención operativa oportuna.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">2</div>
+      <div class="why-text">
+        <h4>Evidencia objetiva para fiscalización</h4>
+        <p>El cruce con horarios teóricos genera datos verificables que pueden respaldar observaciones, informes de incumplimiento o procesos de fiscalización a las empresas operadoras.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">3</div>
+      <div class="why-text">
+        <h4>Detección de problemas de flota</h4>
+        <p>Las unidades sin señal GPS por más de 5 minutos son identificadas automáticamente, facilitando el seguimiento de problemas técnicos o irregularidades operativas.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">4</div>
+      <div class="why-text">
+        <h4>Sin costo adicional de infraestructura</h4>
+        <p>Utiliza exclusivamente datos públicos ya disponibles de la IMM y el STM. No requiere inversión en nuevos sistemas de captura de datos ni modificación de infraestructura existente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: COMO FUNCIONA -->
+<section class="slide" id="s6">
+  <div class="slide-num">05 — Arquitectura técnica</div>
+  <h2>Cómo funciona<br>el sistema</h2>
+  <p class="lead">El sistema integra tres componentes que trabajan de forma coordinada para entregar información procesada en tiempo real.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>API de posiciones en tiempo real</h3>
+        <p>Cada actualización consulta la API pública de la IMM (<code style="font-family:DM Mono,monospace;font-size:11px;color:var(--ac2);">POST /buses/rest/stm-online</code>) que devuelve la posición GPS, empresa, línea y variante de cada unidad activa en ese momento.</p>
+        <span class="step-tag">Fuente: api.montevideo.gub.uy</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Cruce con horarios teóricos</h3>
+        <p>Para cada unidad, el servidor identifica el punto de control más cercano (hasta 1km), consulta el horario teórico para esa línea según día de la semana, y calcula los minutos de atraso o adelanto.</p>
+        <span class="step-tag">Fuente: Datos Abiertos STM — 293.000 registros</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>Dashboard web accesible</h3>
+        <p>Los datos clasificados se presentan en una interfaz web con mapa interactivo, tabla filtrable y métricas resumen. Accesible desde cualquier dispositivo sin instalación.</p>
+        <span class="step-tag">Tecnología: Node.js + Leaflet.js + OpenStreetMap</span>
+      </div>
+    </div>
+  </div>
+  <div class="tech-row">
+    <div class="tech-chip">Node.js</div>
+    <div class="tech-chip">Express</div>
+    <div class="tech-chip">Leaflet.js</div>
+    <div class="tech-chip">API IMM</div>
+    <div class="tech-chip">Datos Abiertos STM</div>
+    <div class="tech-chip">GitHub Pages</div>
+    <div class="tech-chip">Render</div>
+  </div>
+</section>
+
+<!-- SLIDE 7: CTA -->
+<section class="slide cta-slide" id="s7">
+  <div class="bg-grid"></div>
+  <div class="slide-num" style="justify-content:center;">06 — Acceso</div>
+  <h2>El sistema está<br>operativo hoy</h2>
+  <p class="lead">El Monitor STM ya está desplegado y en funcionamiento. No requiere instalación ni configuración adicional para su uso.</p>
+  <a class="cta-btn" href="https://aguarch21-design.github.io/stm-proxy/reporte-buses-stm.html" target="_blank">
+    Acceder al Monitor →
+  </a>
+  <div class="url-box">aguarch21-design.github.io/stm-proxy/reporte-buses-stm.html</div>
+  <div style="margin-top:3rem;display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;">
+    <div style="text-align:center;">
+      <div style="font-family:Syne,sans-serif;font-size:2rem;font-weight:800;color:var(--ok);">Gratis</div>
+      <div style="font-size:12px;color:var(--mu);margin-top:4px;">Infraestructura</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-family:Syne,sans-serif;font-size:2rem;font-weight:800;color:var(--ac2);">24/7</div>
+      <div style="font-size:12px;color:var(--mu);margin-top:4px;">Disponibilidad</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-family:Syne,sans-serif;font-size:2rem;font-weight:800;color:var(--early);">0</div>
+      <div style="font-size:12px;color:var(--mu);margin-top:4px;">Instalación requerida</div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Update nav dots on scroll
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.nav-dot');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      const idx = Array.from(slides).indexOf(e.target);
+      dots.forEach(d => d.classList.remove('active'));
+      if(dots[idx]) dots[idx].classList.add('active');
+    }
+  });
+}, {threshold: 0.5});
+slides.forEach(s => observer.observe(s));
+</script>
+
+<section class="slide" id="s8">
+  <div class="bg-grid"></div>
+  <div class="slide-num">07 — Hoja de ruta</div>
+  <h2>Proximos pasos</h2>
+  <p class="lead">El sistema esta en evolucion continua. Las siguientes fases amplian las capacidades de control y analisis del cumplimiento del STM.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="color:var(--ok);">&#10003;</div>
+      <div class="step-content">
+        <h3 style="color:var(--ok);">Fase 1 &mdash; Completada</h3>
+        <p>Monitor en tiempo real con clasificacion por horario teorico. Cruce de GPS con minutas teoricas del STM. Mapa interactivo, filtros y metricas de cumplimiento.</p>
+        <span class="step-tag" style="background:rgba(0,217,139,0.1);color:var(--ok);">Operativo</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="color:var(--early);">&#8635;</div>
+      <div class="step-content">
+        <h3 style="color:var(--early);">Fase 2 &mdash; En desarrollo</h3>
+        <p>Historial de cumplimiento semanal con base de datos en la nube. Evolucion de indicadores por linea y empresa a lo largo del tiempo. Exportacion a CSV para informes.</p>
+        <span class="step-tag" style="background:rgba(255,165,2,0.1);color:var(--early);">En desarrollo</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="color:var(--ac2);">&#9711;</div>
+      <div class="step-content">
+        <h3 style="color:var(--ac2);">Fase 3 &mdash; Planificada</h3>
+        <p>Exportacion automatica a CSV y reportes por empresa y linea. Alertas automaticas cuando una unidad permanece mas de 2 minutos detenida en una parada sin justificacion de horario.</p>
+        <span class="step-tag">Planificado</span>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
